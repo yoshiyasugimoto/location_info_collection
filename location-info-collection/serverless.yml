@@ -12,7 +12,7 @@ provider:
   runtime: python3.8
   environment:
     DYNAMODB_TABLE: ${env:DYNAMODB_TABLE}
-    # S3_BUCKET:
+    S3_BUCKET: ${env:S3_BUCKET}
   lambdaHashingVersion: 20201221
   stage: production
   region: ap-northeast-1
@@ -35,7 +35,8 @@ functions:
   #   handler: handler.run
   #   events:
   #     # Invoke Lambda function every 2nd minute from Mon-Fri
-  #     # - schedule: cron(0/2 * ? * MON-FRI *)
+  # 日本時間で朝5時に処理を定期実行
+  #     # - schedule: cron(0 20 * * * *)
 
   post:
     handler: handler.post
@@ -44,3 +45,6 @@ functions:
           path: /post
           method: post
           cors: true
+
+  output:
+    handler: handler.output_csv
