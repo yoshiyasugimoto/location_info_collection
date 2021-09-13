@@ -26,18 +26,6 @@ provider:
         - "arn:aws:s3:::*"
 
 functions:
-  # rateHandler:
-  #   handler: handler.run
-  #   events:
-  #     # Invoke Lambda function every minute
-  #     # - schedule: rate(1 minute)
-  # cronHandler:
-  #   handler: handler.run
-  #   events:
-  #     # Invoke Lambda function every 2nd minute from Mon-Fri
-  # 日本時間で朝5時に処理を定期実行
-  #     # - schedule: cron(0 20 * * * *)
-
   post:
     handler: handler.post
     events:
