@@ -67,7 +67,7 @@ def output_csv(event, context):
 
     column_names = ['user_id', 'timestamp', 'lat_north_south', 'latitude', 'lon_west_east', 'longitude']
     daily_location_info_file = f'{date_str}-location-info-collection.csv'
-    with open(daily_location_info_file, 'w') as f:
+    with open(f'/tmp/{daily_location_info_file}', 'w') as f:
         writer = csv.DictWriter(f, fieldnames=column_names)
         writer.writeheader()
         for d in daily_location_data:
@@ -75,7 +75,7 @@ def output_csv(event, context):
             writer.writerow(d)
 
     bucket = s3.Bucket(S3_BUCKET)
-    bucket.upload_file(daily_location_info_file, daily_location_info_file)
+    bucket.upload_file(f'/tmp/{daily_location_info_file}', daily_location_info_file)
     return {
         'statusCode': 200,
         'body': json.dumps('success!')
