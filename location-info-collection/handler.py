@@ -15,6 +15,9 @@ S3_BUCKET = os.getenv("S3_BUCKET")
 
 
 def post(event, context):
+    """
+    1. 顧客デバイスから送信される位置情報データを dynamodb に収集するための API
+    """
     body: dict = json.loads(event['body'])
     location = body['location']
 
@@ -44,6 +47,9 @@ def post(event, context):
 
 
 def output_csv(event, context):
+    """
+    2. 毎日 AM6 時に収集した位置情報を`example_output.csv`のように s3 に保存する
+    """
     now_jst = datetime.now(timezone(timedelta(hours=9)))
     start_datetime = datetime(now_jst.year, now_jst.month, now_jst.day - 1, 0, 0, 0, 0, tzinfo=timezone(timedelta(hours=9)))
     end_datetime = datetime(now_jst.year, now_jst.month, now_jst.day - 1, 23, 59, 0, 0, tzinfo=timezone(timedelta(hours=9)))
@@ -84,6 +90,9 @@ def output_csv(event, context):
 
 
 def bucket_list(event, context):
+    """
+    3. 毎日 AM6 時に s3 に作成された一覧を取得するAPI
+    """
     bucket = s3.Bucket(S3_BUCKET)
     files = [f.key for f in bucket.objects.all()]
 
@@ -100,6 +109,9 @@ def bucket_list(event, context):
 
 
 def download_csv(event, context):
+    """
+    4. 毎日 AM6 時に s3 に作成された csv ファイルをダウンロードするための API
+    """
     path = event.get('pathParameters')
     csv_file = path['file']
 
