@@ -124,7 +124,9 @@ def download_csv(event, context):
 
     return {'statusCode': 200,
             'headers': {
-                "Content-Type": "application/zip"
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
             },
             'body': encode_string.decode()
             }
