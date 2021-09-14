@@ -1,3 +1,4 @@
+import base64
 import csv
 from datetime import datetime, timezone, timedelta
 import json
@@ -80,3 +81,38 @@ def output_csv(event, context):
         'statusCode': 200,
         'body': json.dumps('success!')
     }
+
+
+def bucket_list(event, context):
+    bucket = s3.Bucket(S3_BUCKET)
+    files = [f.key for f in bucket.objects.all()]
+
+    response = {
+        "statusCode": 200,
+        'headers': {
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+        },
+        "body": json.dumps(files)
+    }
+    return response
+
+
+def download_csv(event, context):
+    path = event.get('pathParameters')
+    csv_file = path['file']
+
+    bucket = s3.Bucket(S3_BUCKET)
+    bucket.download_file(csv_file, f'/tmp/{csv_file}')
+
+    with open(f"/tmp/{csv_file}", "rb") as f:
+        bytes = f.read()
+        encode_string = base64.b64encode(bytes)
+
+    return {'statusCode': 200,
+            'headers': {
+                "Content-Type": "application/zip"
+            },
+            'body': encode_string.decode()
+            }

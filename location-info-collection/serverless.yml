@@ -38,3 +38,29 @@ functions:
     handler: handler.output_csv
     events:
       - schedule: cron(0 21 * * ? *)
+
+  bucket_list:
+    handler: handler.bucket_list
+    events:
+      - http:
+          path: /bucket_list
+          method: get
+          cors: true
+          response:
+            headers:
+              Content-Type: application/json;charset=UTF-8
+
+  download_csv:
+    handler: handler.download_csv
+    events:
+      - http:
+          path: /download_csv/{file}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                file: true
+          response:
+            headers:
+              Content-Type: application/json;charset=UTF-8
